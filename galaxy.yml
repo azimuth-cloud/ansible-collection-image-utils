@@ -1,6 +1,8 @@
 ---
 namespace: azimuth_cloud
 name: image_utils
+version: main
+readme: README.md
 authors:
   - Bertie Thorpe <bertie@stackhpc.com>
 description: Ansible collection for image utils
