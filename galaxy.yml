@@ -1,0 +1,12 @@
+---
+namespace: azimuth_cloud
+name: image_utils
+authors:
+  - Bertie Thorpe <bertie@stackhpc.com>
+description: Ansible collection for image utils
+license:
+  - Apache-2.0
+tags:
+  - ansible-init
+dependencies: {}
+repository: https://github.com/azimuth-cloud/ansible-collection-image-utils
