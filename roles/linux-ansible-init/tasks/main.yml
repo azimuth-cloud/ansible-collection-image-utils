@@ -1,0 +1,62 @@
+---
+
+- name: Install python venv command
+  package:
+    name: "{{ python3_pkg[ansible_facts['distribution'] + ansible_facts['distribution_major_version']] }}"
+    # it depends:
+    # OS      package       command         python_ver
+    # ubuntu  python3-venv
+    # ubuntu  ?             python3         ?
+    # RL8     python39      python3.9       3.9.19
+    # RL9     python3       python3,python3.9 3.9.18
+  vars:
+    python3_pkg:
+      Rocky8: python39
+      Rocky9: python3
+      Ubuntu22: python3-venv
+
+- name: Install dependencies into virtualenv
+  pip:
+    name:
+      - ansible
+      - jmespath
+      - requests
+    state: latest
+    virtualenv: /usr/lib/ansible-init
+    virtualenv_command: "{{ python3_cmds[ansible_facts['distribution']] }} -m venv --upgrade-deps"
+  vars:
+    python3_cmds:
+      Ubuntu: python3
+      Rocky: python3.9
+
+- name: Ensure config directories exist
+  file:
+    state: directory
+    path: "/etc/ansible-init/{{ item }}"
+  loop:
+    - vars
+    - playbooks
+    - includes
+    - inventory
+
+- name: Install Ansible config file
+  copy:
+    src: ansible.cfg
+    dest: /etc/ansible-init/ansible.cfg
+
+- name: Install ansible-init script
+  copy:
+    src: ansible-init.py
+    dest: /usr/bin/ansible-init
+    mode: +x
+
+- name: Install systemd unit file
+  copy:
+    src: ansible-init.service
+    dest: /etc/systemd/system/ansible-init.service
+
+- name: Ensure ansible-init service is enabled
+  systemd:
+    daemon_reload: yes
+    name: ansible-init.service
+    enabled: yes
