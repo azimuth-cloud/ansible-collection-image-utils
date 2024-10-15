@@ -8,7 +8,6 @@ ConditionPathExists=!/var/lib/ansible-init.done
 Type=oneshot
 RemainAfterExit=true
 ExecStart=/usr/bin/ansible-init
-ExecStartPost=touch /var/lib/ansible-init.done
 Restart=on-failure
 RestartSec=10
 StandardOutput=journal+console
