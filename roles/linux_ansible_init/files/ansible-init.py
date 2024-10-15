@@ -14,7 +14,7 @@ logging.basicConfig(level = logging.INFO, format = "[%(levelname)s] %(message)s"
 
 logger = logging.getLogger(__name__)
 
-SENTINEL_FILE_PATH = /var/lib/ansible-init.done
+SENTINEL_FILE_PATH = "/var/lib/ansible-init.done"
 
 def create_sentinel_file():
     """
