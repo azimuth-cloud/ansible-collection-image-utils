@@ -5,6 +5,7 @@ import logging
 import os
 import pathlib
 import subprocess
+import sys
 
 import requests
 
@@ -111,7 +112,11 @@ for playbook in playbooks:
         )
 
 
+logger.info("writing sentinel file /var/lib/ansible-init.done")
 SENTINEL = pathlib.Path("/var/lib/ansible-init.done")
-
 SENTINEL.parent.mkdir(mode = o755, parents = True, exist_ok = True)
 SENTINEL.touch(mode=0o644)
+
+
+logger.info("ansible-init completed successfully")
+
