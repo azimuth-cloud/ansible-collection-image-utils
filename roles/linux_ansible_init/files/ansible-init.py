@@ -14,21 +14,6 @@ logging.basicConfig(level = logging.INFO, format = "[%(levelname)s] %(message)s"
 
 logger = logging.getLogger(__name__)
 
-SENTINEL_FILE_PATH = "/var/lib/ansible-init.done"
-
-def create_sentinel_file():
-    """
-    Creates a sentinel file to mark the service as executed.
-    """
-    try:
-        # Ensure the directory exists
-        os.makedirs(os.path.dirname(SENTINEL_FILE_PATH), exist_ok=True)
-        with open(SENTINEL_FILE_PATH, 'w') as f:
-            f.write("ansible-init executed")
-        logger.info("Sentinel file created at: %s", SENTINEL_FILE_PATH)
-    except Exception as e:
-        logger.error("Failed to create sentinel file: %s", e)
-
 
 def assemble_list(data, prefix):
     """
@@ -63,7 +48,7 @@ user_metadata = response.json().get("meta", {})
 logger.info("checking for ansible-init disable flag")
 if user_metadata.get("ansible_init_disable", "false").lower() == "true":
     logger.info("ansible-init is disabled via metadata. Exiting.")
-    exit(0)  # Exit early if ansible-init is disabled.
+    sys.exit(0)  # Exit early if ansible-init is disabled.
 
 
 logger.info("extracting collections and playbooks from metadata")
@@ -126,4 +111,8 @@ for playbook in playbooks:
         )
 
 
-create_sentinel_file()
+SENTINEL = pathlib.Path("/var/lib/ansible-init.done")
+
+SENTINEL.parent.mkdir(mode = o755, parents = True, exist_ok = True)
+with SENTINEL.open('w') as f:
+    f.write("ansible-init succeeded")
