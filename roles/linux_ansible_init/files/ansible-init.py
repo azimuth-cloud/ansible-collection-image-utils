@@ -114,5 +114,4 @@ for playbook in playbooks:
 SENTINEL = pathlib.Path("/var/lib/ansible-init.done")
 
 SENTINEL.parent.mkdir(mode = o755, parents = True, exist_ok = True)
-with SENTINEL.open('w') as f:
-    f.write("ansible-init succeeded")
+SENTINEL.touch(mode=0o644)
