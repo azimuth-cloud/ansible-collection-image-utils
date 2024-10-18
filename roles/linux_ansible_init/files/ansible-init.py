@@ -114,7 +114,7 @@ for playbook in playbooks:
 
 logger.info("writing sentinel file /var/lib/ansible-init.done")
 SENTINEL = pathlib.Path("/var/lib/ansible-init.done")
-SENTINEL.parent.mkdir(mode = o755, parents = True, exist_ok = True)
+SENTINEL.parent.mkdir(mode = 0o755, parents = True, exist_ok = True)
 SENTINEL.touch(mode=0o644)
 
 
