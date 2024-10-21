@@ -5,6 +5,7 @@ import logging
 import os
 import pathlib
 import subprocess
+import sys
 
 import requests
 
@@ -43,6 +44,12 @@ METADATA_URL = "http://169.254.169.254/openstack/latest/meta_data.json"
 response = requests.get(METADATA_URL)
 response.raise_for_status()
 user_metadata = response.json().get("meta", {})
+
+
+logger.info("checking for ansible-init disable flag")
+if user_metadata.get("ansible_init_disable", "false").lower() == "true":
+    logger.info("ansible-init is disabled via metadata. Exiting.")
+    sys.exit(0)  # Exit early if ansible-init is disabled.
 
 
 logger.info("extracting collections and playbooks from metadata")
@@ -103,3 +110,13 @@ for playbook in playbooks:
             "127.0.0.1,",
             playbook["name"]
         )
+
+
+logger.info("writing sentinel file /var/lib/ansible-init.done")
+SENTINEL = pathlib.Path("/var/lib/ansible-init.done")
+SENTINEL.parent.mkdir(mode = 0o755, parents = True, exist_ok = True)
+SENTINEL.touch(mode=0o644)
+
+
+logger.info("ansible-init completed successfully")
+
