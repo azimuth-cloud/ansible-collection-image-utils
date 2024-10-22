@@ -41,7 +41,7 @@ def ansible_exec(cmd, *args, **kwargs):
 
 logger.info("fetching instance metadata")
 METADATA_URL = "http://169.254.169.254/openstack/latest/meta_data.json"
-response = requests.get(METADATA_URL)
+response = requests.get(METADATA_URL, timeout=300)
 response.raise_for_status()
 user_metadata = response.json().get("meta", {})
 
