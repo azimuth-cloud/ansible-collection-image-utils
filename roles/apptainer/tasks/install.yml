@@ -1,0 +1,58 @@
+---
+
+- name: Configure repository for Apptainer packages [deb]
+  apt_repository:
+    repo: "{{ apptainer_deb_repository }}"
+    update_cache: true
+  become: true
+  when: ansible_os_family == 'Debian'
+
+- name: Install Apptainer packages [deb]
+  apt:
+    name: "{{ apptainer_deb_package }}"
+    state: present
+    allow_downgrade: yes
+  become: true
+  when: ansible_os_family == 'Debian'
+
+- name: Configure repository for Apptainer packages [rpm]
+  yum_repository:
+      name: "{{ apptainer_rpm_repository.name }}"
+      description: >-
+        "{% if 'description' in apptainer_rpm_repository %}
+        {{ apptainer_rpm_repository.description }}
+        {% else %}
+        {{ apptainer_rpm_repository.name }} repository
+        {% endif %}"
+      baseurl: "{{ apptainer_rpm_repository.baseurl | default(omit)}}"
+      file: "{{ apptainer_rpm_repository.file | default(omit)}}"
+      gpgkey: "{{ apptainer_rpm_repository.gpgkey | default(omit)}}"
+      gpgcheck: "{{ apptainer_rpm_repository.gpgcheck | default(omit)}}"
+      cost: "{{ apptainer_rpm_repository.cost | default(omit)}}"
+      enabled: "{{ apptainer_rpm_repository.enabled | default(omit)}}"
+      exclude: "{{ apptainer_rpm_repository.exclude | default(omit)}}"
+      gpgcakey: "{{ apptainer_rpm_repository.gpgcakey | default(omit)}}"
+      includepkgs: "{{ apptainer_rpm_repository.includepkgs | default(omit)}}"
+      metadata_expire: "{{ apptainer_rpm_repository.metadata_expire | default(omit)}}"
+      metalink: "{{ apptainer_rpm_repository.metalink | default(omit)}}"
+      mirrorlist: "{{ apptainer_rpm_repository.mirrorlist | default(omit)}}"
+      mirrorlist_expire: "{{ apptainer_rpm_repository.mirrorlist_expire | default(omit)}}"
+      password: "{{ apptainer_rpm_repository.password | default(omit) }}"
+      priority: "{{ apptainer_rpm_repository.priority | default(omit)}}"
+      proxy: "{{ apptainer_rpm_repository.proxy | default(omit)}}"
+      proxy_password: "{{ apptainer_rpm_repository.proxy_password | default(omit)}}"
+      proxy_username: "{{ apptainer_rpm_repository.proxy_username | default(omit)}}"
+      repo_gpgcheck: "{{ apptainer_rpm_repository.repo_gpgcheck | default(omit)}}"
+      sslverify: "{{ apptainer_rpm_repository.sslverify | default(omit)}}"
+      username: "{{ apptainer_rpm_repository.username | default(omit) }}"
+      state: "{{ apptainer_rpm_repository.state | default(omit)}}"
+  become: true
+  when: 
+    - ansible_os_family == 'RedHat'
+    - apptainer_rpm_repository
+
+- name: Install Apptainer packages [rpm]
+  dnf:
+    name: "{{ apptainer_rpm_package }}"
+  become: true
+  when: ansible_os_family == 'RedHat'

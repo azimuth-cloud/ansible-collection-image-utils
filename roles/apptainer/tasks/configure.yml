@@ -1,0 +1,10 @@
+---
+
+- name: Override Apptainer config directives
+  command:
+    cmd: apptainer config global --set "{{ item.directive }}" "{{ item.value }}"
+  become: true
+  when: apptainer_config_overrides
+  loop: apptainer_config_overrides
+  loop_control:
+    label: "{{ item.directive }} = {{ item.value }}"
