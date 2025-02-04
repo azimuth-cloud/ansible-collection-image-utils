@@ -1,0 +1,7 @@
+---
+
+- name: Install Nextflow
+  include_tasks: install.yml
+
+- name: Configure Nextflow
+  import_tasks: configure.yml
