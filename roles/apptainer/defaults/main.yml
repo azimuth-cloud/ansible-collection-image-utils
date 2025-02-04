@@ -9,6 +9,6 @@ apptainer_rpm_repository:
 apptainer_rpm_package: "apptainer-1.3.6"
 
 # e.g.
-#  - "directive": "mount tmp"
-#    "value": "no"
+#  - directive: "mount tmp"
+#    value: "no"
 apptainer_config_overrides: []
