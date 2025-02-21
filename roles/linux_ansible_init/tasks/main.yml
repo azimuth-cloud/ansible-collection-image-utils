@@ -72,5 +72,5 @@
 
 - name: Remove CyberArk Conjur collection from virtualenv
   file:
-    path: "/usr/lib/ansible-init/lib/python{{ python_version }}/site-packages/ansible_collections/cyberark"
+    path: "/usr/lib/ansible-init/lib/python{{ python_version.stdout }}/site-packages/ansible_collections/cyberark"
     state: absent
