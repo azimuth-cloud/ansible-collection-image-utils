@@ -6,6 +6,10 @@ The ansible-init system consists of a script that is installed in the image and 
 
 ansible-init is able to execute playbooks that are baked into the images, and also from arbitrary Ansible collections, e.g. from Galaxy or from a Git repository. These extra playbooks are specified by the Azimuth operator in their Azimuth configuration, and communicated to the instances that make up platforms using cloud-init instance metadata. This allows site- or platform-specific customisations to be applied to instances in a consistent way without modifying the images.
 
+## Role variables
+
+- `ansible_init_pip_packages`: Optional. List of packages to install into venv.
+
 ## Usage
 
 The 255 byte limit per key/value pair for instance metadata means that collections will be defined by metadata items of the following structure:

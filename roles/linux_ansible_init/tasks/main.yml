@@ -17,10 +17,7 @@
 
 - name: Install dependencies into virtualenv
   pip:
-    name:
-      - ansible
-      - jmespath
-      - requests
+    name: "{{ ansible_init_pip_packages }}"
     state: latest
     virtualenv: /usr/lib/ansible-init
     virtualenv_command: "{{ python3_cmds[ansible_facts['distribution']] }} -m venv --upgrade-deps"
