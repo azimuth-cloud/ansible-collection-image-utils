@@ -57,3 +57,17 @@
     daemon_reload: yes
     name: ansible-init.service
     enabled: yes
+
+- name: Get short Python version
+  command: "/usr/lib/ansible-init/bin/{{ python3_cmds[ansible_facts['distribution']] }} -c 'import sys; print(f\"{sys.version_info.major}.{sys.version_info.minor}\")'"
+  register: python_version
+  changed_when: false
+  vars:
+    python3_cmds:
+      Ubuntu: python3
+      Rocky: python3.9
+
+- name: Remove CyberArk Conjur collection from virtualenv
+  file:
+    path: "/usr/lib/ansible-init/lib/python{{ python_version.stdout }}/site-packages/ansible_collections/cyberark"
+    state: absent
