@@ -1,7 +1,7 @@
 ---
 
 - name: Install python venv command
-  package:
+  ansible.builtin.package:
     name: "{{ python3_pkg[ansible_facts['distribution'] + ansible_facts['distribution_major_version']] }}"
     # it depends:
     # OS      package       command         python_ver
@@ -16,9 +16,9 @@
       Ubuntu22: python3-venv
 
 - name: Install dependencies into virtualenv
-  pip:
+  ansible.builtin.pip:
     name: "{{ ansible_init_pip_packages }}"
-    state: latest
+    state: present
     virtualenv: /usr/lib/ansible-init
     virtualenv_command: "{{ python3_cmds[ansible_facts['distribution']] }} -m venv --upgrade-deps"
   vars:
@@ -27,9 +27,10 @@
       Rocky: python3.9
 
 - name: Ensure config directories exist
-  file:
+  ansible.builtin.file:
     state: directory
     path: "/etc/ansible-init/{{ item }}"
+    mode: "0755"
   loop:
     - vars
     - playbooks
@@ -37,23 +38,25 @@
     - inventory
 
 - name: Install Ansible config file
-  copy:
+  ansible.builtin.copy:
     src: ansible.cfg
     dest: /etc/ansible-init/ansible.cfg
+    mode: "0644"
 
 - name: Install ansible-init script
-  copy:
+  ansible.builtin.copy:
     src: ansible-init.py
     dest: /usr/bin/ansible-init
-    mode: +x
+    mode: "0755"
 
 - name: Install systemd unit file
-  copy:
+  ansible.builtin.copy:
     src: ansible-init.service
     dest: /etc/systemd/system/ansible-init.service
+    mode: "0644"
 
 - name: Ensure ansible-init service is enabled
-  systemd:
-    daemon_reload: yes
+  ansible.builtin.systemd:
+    daemon_reload: true
     name: ansible-init.service
-    enabled: yes
+    enabled: true

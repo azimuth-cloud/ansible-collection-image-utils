@@ -9,6 +9,6 @@ description: Ansible collection for image utils
 license:
   - Apache-2.0
 tags:
-  - ansible-init
+  - tools
 dependencies: {}
 repository: https://github.com/azimuth-cloud/ansible-collection-image-utils
