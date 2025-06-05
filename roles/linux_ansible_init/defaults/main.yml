@@ -1,0 +1,4 @@
+ansible_init_pip_packages:
+  - ansible
+  - jmespath
+  - requests
