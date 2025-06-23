@@ -1,4 +1,7 @@
 #!/usr/lib/ansible-init/bin/python
+# pylint: disable=C0103
+
+"""This module bootstraps instance configuration from metadata and playbooks baked into the image"""
 
 import json
 import logging
@@ -9,8 +12,7 @@ import sys
 
 import requests
 
-
-logging.basicConfig(level = logging.INFO, format = "[%(levelname)s] %(message)s")
+logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
 
 logger = logging.getLogger(__name__)
@@ -24,7 +26,7 @@ def assemble_list(data, prefix):
     for key, value in data.items():
         if not key.startswith(prefix):
             continue
-        idx, item_key = key.removeprefix(prefix).split("_", maxsplit = 1)
+        idx, item_key = key.removeprefix(prefix).split("_", maxsplit=1)
         list_items.setdefault(idx, {})[item_key] = value
     return [list_items[k] for k in sorted(list_items.keys())]
 
@@ -36,7 +38,7 @@ def ansible_exec(cmd, *args, **kwargs):
     environ = os.environ.copy()
     environ["ANSIBLE_CONFIG"] = "/etc/ansible-init/ansible.cfg"
     cmd = f"/usr/lib/ansible-init/bin/ansible-{cmd}"
-    subprocess.run([cmd, *args], env = environ, check = True, **kwargs)
+    subprocess.run([cmd, *args], env=environ, check=True, **kwargs)
 
 
 logger.info("fetching instance metadata")
@@ -55,8 +57,8 @@ if user_metadata.get("ansible_init_disable", "false").lower() == "true":
 logger.info("extracting collections and playbooks from metadata")
 collections = assemble_list(user_metadata, "ansible_init_coll_")
 playbooks = assemble_list(user_metadata, "ansible_init_pb_")
-logger.info(f"  found {len(collections)} collections")
-logger.info(f"  found {len(playbooks)} playbooks")
+logger.info("  found %s collections", len(collections))
+logger.info("  found %s playbooks", len(playbooks))
 
 
 logger.info("installing collections")
@@ -67,56 +69,50 @@ ansible_exec(
     "--force",
     "--requirements-file",
     "/dev/stdin",
-    input = json.dumps({ "collections": collections }).encode()
+    input=json.dumps({"collections": collections}).encode(),
 )
 
 
 logger.info("executing remote playbooks for stage - pre")
 for playbook in playbooks:
     if playbook.get("stage", "post") == "pre":
-        logger.info(f"  executing playbook - {playbook['name']}")
+        logger.info("  executing playbook - %s", playbook["name"])
         ansible_exec(
             "playbook",
             "--connection",
             "local",
             "--inventory",
             "127.0.0.1,",
-            playbook["name"]
+            playbook["name"],
         )
 
 
 logger.info("executing playbooks from /etc/ansible-init/playbooks")
 for playbook in sorted(pathlib.Path("/etc/ansible-init/playbooks").glob("*.yml")):
-    logger.info(f"  executing playbook - {playbook}")
+    logger.info("  executing playbook - %s", playbook)
     ansible_exec(
-        "playbook",
-        "--connection",
-        "local",
-        "--inventory",
-        "127.0.0.1,",
-        str(playbook)
+        "playbook", "--connection", "local", "--inventory", "127.0.0.1,", str(playbook)
     )
 
 
 logger.info("executing remote playbooks for stage - post")
 for playbook in playbooks:
     if playbook.get("stage", "post") == "post":
-        logger.info(f"  executing playbook - {playbook['name']}")
+        logger.info("  executing playbook - %s", playbook["name"])
         ansible_exec(
             "playbook",
             "--connection",
             "local",
             "--inventory",
             "127.0.0.1,",
-            playbook["name"]
+            playbook["name"],
         )
 
 
 logger.info("writing sentinel file /var/lib/ansible-init.done")
 SENTINEL = pathlib.Path("/var/lib/ansible-init.done")
-SENTINEL.parent.mkdir(mode = 0o755, parents = True, exist_ok = True)
+SENTINEL.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
 SENTINEL.touch(mode=0o644)
 
 
 logger.info("ansible-init completed successfully")
-
