@@ -1,0 +1,15 @@
+---
+
+- name: Create Nextflow config directory in /etc/skel
+  file:
+    state: directory
+    path: /etc/skel/.nextflow
+  when: nextflow_skel_config
+  become: true
+
+- name: Write Nextflow config file to /etc/skel
+  copy:
+    dest: /etc/skel/.nextflow/config
+    content: "{{ nextflow_skel_config }}"
+  become: true
+  when: nextflow_skel_config
