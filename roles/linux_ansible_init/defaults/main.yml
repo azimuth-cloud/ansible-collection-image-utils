@@ -3,3 +3,11 @@ ansible_init_pip_packages:
   - ansible
   - jmespath
   - requests
+
+# Multiline string of default config to add to
+# ansible.cfg
+ansible_init_ansible_cfg_default_extra:
+
+# Multiline string of extra config to add to
+# ansible.cfg
+ansible_init_ansible_cfg_extra:

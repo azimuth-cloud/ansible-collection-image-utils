@@ -39,8 +39,8 @@
     - inventory
 
 - name: Install Ansible config file
-  ansible.builtin.copy:
-    src: ansible.cfg
+  ansible.builtin.template:
+    src: ansible.cfg.j2
     dest: /etc/ansible-init/ansible.cfg
     mode: "0644"
 
