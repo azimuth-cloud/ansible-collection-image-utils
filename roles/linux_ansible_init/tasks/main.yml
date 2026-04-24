@@ -27,6 +27,12 @@
       Ubuntu: python3
       Rocky: python3.9
 
+- name: Ensure ansible-init ansible_home directory permissions allow everyone to execute
+  ansible.builtin.file:
+    state: directory
+    path: "{{ ansible_init_ansible_home_directory }}"
+    mode: "0755"
+
 - name: Ensure config directories exist
   ansible.builtin.file:
     state: directory

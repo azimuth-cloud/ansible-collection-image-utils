@@ -4,6 +4,10 @@ ansible_init_pip_packages:
   - jmespath
   - requests
 
+# Ansible home directory for ansible-init
+# https://docs.ansible.com/projects/ansible/latest/reference_appendices/config.html#ansible-home
+ansible_init_ansible_home_directory: "/var/lib/ansible-init"
+
 # Multiline string of default config to add to
 # ansible.cfg
 ansible_init_ansible_cfg_default_extra:

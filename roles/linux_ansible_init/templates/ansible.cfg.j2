@@ -1,5 +1,5 @@
 [defaults]
-home = /var/lib/ansible-init
+home = {{ ansible_init_ansible_home_directory }}
 local_tmp = /var/tmp/ansible-init
 inventory = /etc/ansible-init/inventory
 {{ ansible_init_ansible_cfg_default_extra }}
