@@ -1,14 +1,13 @@
 ---
-
 - name: Install python venv command
   ansible.builtin.package:
     name: "{{ python3_pkg[ansible_facts['distribution'] + ansible_facts['distribution_major_version']] }}"
     # it depends:
-    # OS      package       command         python_ver
-    # ubuntu  python3-venv
-    # ubuntu  ?             python3         ?
-    # RL8     python39      python3.9       3.9.19
-    # RL9     python3       python3,python3.9 3.9.18
+    # OS        package       command           python_ver
+    # ubuntu22  python3-venv  python3           3.10.12
+    # ubuntu24  python3-venv  python3           3.12.3
+    # RL8       python39      python3.9         3.9.19
+    # RL9       python3       python3,python3.9 3.9.18
   vars:
     python3_pkg:
       Rocky8: python39
