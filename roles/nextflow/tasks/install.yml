@@ -1,0 +1,13 @@
+---
+
+- name: Install OpenJDK
+  package:
+    name: "{{ nextflow_openjdk_package_name }}"
+  become: true
+
+- name: Install Nextflow
+  get_url:
+    url: "{{ nextflow_executable_url }}"
+    dest: /usr/local/bin/nextflow
+    mode: u=rwx,g=rx,o=rx
+  become: true
