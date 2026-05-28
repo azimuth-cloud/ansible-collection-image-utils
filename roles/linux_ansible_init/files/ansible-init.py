@@ -90,9 +90,7 @@ for playbook in playbooks:
 logger.info("executing playbooks from /etc/ansible-init/playbooks")
 for playbook in sorted(pathlib.Path("/etc/ansible-init/playbooks").glob("*.yml")):
     logger.info("  executing playbook - %s", playbook)
-    ansible_exec(
-        "playbook", "--connection", "local", "--inventory", "127.0.0.1,", str(playbook)
-    )
+    ansible_exec("playbook", "--connection", "local", "--inventory", "127.0.0.1,", str(playbook))
 
 
 logger.info("executing remote playbooks for stage - post")
