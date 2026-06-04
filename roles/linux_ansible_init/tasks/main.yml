@@ -15,6 +15,7 @@
       Rocky9: python3
       Ubuntu22: python3-venv
       Ubuntu24: python3-venv
+      Ubuntu26: python3-venv
 
 - name: Install dependencies into virtualenv
   ansible.builtin.pip:
