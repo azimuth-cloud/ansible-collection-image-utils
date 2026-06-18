@@ -1,0 +1,7 @@
+---
+
+- name: Install Apptainer
+  include_tasks: install.yml
+
+- name: Configure Apptainer
+  import_tasks: configure.yml

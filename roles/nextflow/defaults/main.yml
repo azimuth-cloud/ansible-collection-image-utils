@@ -1,0 +1,14 @@
+---
+
+nextflow_openjdk_package_name: >-
+  {{ 
+    'java-21-openjdk' 
+    if ansible_os_family == 'RedHat'
+    else 'openjdk-21-jdk'
+    }}
+
+nextflow_version: "v24.10.4"
+
+nextflow_executable_url: https://github.com/nextflow-io/nextflow/releases/download/{{ nextflow_version }}/nextflow
+
+nextflow_skel_config:
